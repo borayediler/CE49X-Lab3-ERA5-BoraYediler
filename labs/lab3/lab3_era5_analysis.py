@@ -179,9 +179,11 @@ plt.tight_layout()
 plt.show()
 
 # --- Compute wind direction (in degrees) ---
+
 df_b["wind_dir"] = np.degrees(np.arctan2(df_b["v10m"], df_b["u10m"]))
 df_m["wind_dir"] = np.degrees(np.arctan2(df_m["v10m"], df_m["u10m"]))
 
+# Here divides a circle into 8 pieces which of each is 45 degrees. It classifies the direction according to this seperation.
 def direction_category(angle):
     dirs = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"]
     idx = int(((angle + 360) % 360) // 45)
@@ -191,6 +193,7 @@ df_b["dir_cat"] = df_b["wind_dir"].apply(direction_category)
 df_m["dir_cat"] = df_m["wind_dir"].apply(direction_category)
 
 # --- Wind Direction Distribution (Wind Rose-like bar plot) ---
+# After we compute the directions, the plot has drawn with the codes below.
 plt.figure(figsize=(8, 5))
 sns.countplot(x="dir_cat", data=df_b, order=["N","NE","E","SE","S","SW","W","NW"], color="skyblue", label="Berlin")
 sns.countplot(x="dir_cat", data=df_m, order=["N","NE","E","SE","S","SW","W","NW"], color="salmon", alpha=0.6, label="Munich")
